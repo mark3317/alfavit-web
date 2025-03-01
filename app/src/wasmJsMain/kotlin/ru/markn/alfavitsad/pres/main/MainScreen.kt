@@ -176,76 +176,35 @@ fun IMainActions.MainScreen(state: MainUIState) {
                             fontFamily = fontFamily,
                         )
                     )
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(0.7f),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        itemVerticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        ElevatedCard(
+                    if (windowWidth < 1000.dp) {
+                        val scrollState = rememberScrollState()
+                        Row(
                             modifier = Modifier
-                                .size(width = 400.dp, height = 650.dp)
-                                .padding(24.dp),
-                            shape = RoundedCornerShape(15),
+                                .fillMaxWidth()
+                                .horizontalScroll(scrollState),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Image(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .align(Alignment.TopCenter),
-                                    painter = painterResource(Res.drawable.card1),
-                                    contentDescription = "Kubiki Image",
-                                    contentScale = ContentScale.Crop,
-                                )
-                                Text(
-                                    text = "Развивающие занятия",
-                                    style = TextStyle(
-                                        fontSize = 20.sp,
-                                        fontFamily = fontFamily,
-                                    )
-                                )
-                            }
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
                         }
-                        ElevatedCard(
-                            modifier = Modifier
-                                .size(width = 400.dp, height = 650.dp)
-                                .padding(24.dp),
-                            shape = RoundedCornerShape(15),
+                    } else {
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(0.7f),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalArrangement = Arrangement.SpaceBetween,
+                            itemVerticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = "Развивающие занятия",
-                                    style = TextStyle(
-                                        fontSize = 20.sp,
-                                        fontFamily = fontFamily,
-                                    )
-                                )
-                            }
-                        }
-                        ElevatedCard(
-                            modifier = Modifier
-                                .size(width = 400.dp, height = 650.dp)
-                                .padding(24.dp),
-                            shape = RoundedCornerShape(15),
-                        ) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = "Развивающие занятия",
-                                    style = TextStyle(
-                                        fontSize = 20.sp,
-                                        fontFamily = fontFamily,
-                                    )
-                                )
-                            }
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
+                            InfoCard()
                         }
                     }
                 }
@@ -260,11 +219,59 @@ fun IMainActions.MainScreen(state: MainUIState) {
 }
 
 @Composable
+private fun InfoCard() {
+    ElevatedCard(
+        modifier = Modifier
+            .size(width = 350.dp, height = 550.dp)
+            .padding(24.dp),
+        shape = RoundedCornerShape(15),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.4f),
+                painter = painterResource(Res.drawable.card1),
+                contentDescription = "Kubiki Image",
+                contentScale = ContentScale.Crop,
+            )
+            Column(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = "Развивающие занятия",
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        fontSize = 26.sp,
+                        fontFamily = fontFamily,
+                    )
+                )
+                Text(
+                    text = "Развитие речи, рисование, лепка, аппликация, математическое развитие, окружающий мир, музыка, физкультура",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 28.sp,
+                    ),
+
+                    )
+            }
+        }
+    }
+}
+
+@Composable
 private fun AppHeader(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(64.dp)
             .background(Color.White),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
