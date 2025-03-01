@@ -3,8 +3,11 @@ package ru.markn.alfavitsad.pres.main
 import alfavit_web.app.generated.resources.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -56,7 +59,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
                             drawContent()
                             drawRect(Color.Black.copy(alpha = 0.5f))
                         },
-                    painter = painterResource(Res.drawable.img2),
+                    painter = painterResource(Res.drawable.home),
                     contentDescription = "Img Example",
                     contentScale = ContentScale.Crop,
                 )
@@ -77,7 +80,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
                     )
                     BasicText(
                         modifier = Modifier
-                            .width(windowWidth * 0.7f)
+                            .fillMaxWidth(0.7f)
                             .clickable(
                                 interactionSource = null,
                                 indication = null
@@ -117,17 +120,135 @@ fun IMainActions.MainScreen(state: MainUIState) {
             }
             Box(
                 modifier = Modifier
-                    .height(400.dp)
+                    .wrapContentHeight()
                     .fillMaxWidth()
-                    .background(color = Color(0xFFA1C181)),
+                    .background(color = Color(0xFFFE7F2D)),
                 contentAlignment = Alignment.Center,
             ) {
-                BasicText(
-                    modifier = Modifier.padding(100.dp),
-                    text = state.title,
-                    autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 200.sp),
-                    maxLines = 1
-                )
+                FlowRow(
+                    modifier = Modifier
+                        .padding(vertical = 52.dp)
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.7f),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Center,
+                    itemVerticalAlignment = Alignment.CenterVertically,
+                ) {
+                    BasicText(
+                        modifier = Modifier.fillMaxWidth(0.7f),
+                        text = "С любовью, заботой и знаниями мы помогаем каждому ребенку расти счастливым, здоровым, любознательным и готовым к открытиям в мире знаний!",
+                        autoSize = TextAutoSize.StepBased(minFontSize = 18.sp, maxFontSize = 34.sp),
+                        maxLines = 5,
+                        style = TextStyle(
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            fontFamily = fontFamily,
+                            shadow = Shadow(
+                                color = Color.Black,
+                                offset = Offset(2f, 2f),
+                                blurRadius = 2f
+                            )
+                        )
+                    )
+                    Image(
+                        modifier = Modifier.size(250.dp),
+                        painter = painterResource(Res.drawable.kubiki),
+                        contentDescription = "Kubiki Image",
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .background(color = Color(0xFFF5F5F5)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(52.dp),
+                        text = "Наши занятия",
+                        style = TextStyle(
+                            fontSize = 46.sp,
+                            fontFamily = fontFamily,
+                        )
+                    )
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(0.7f),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        itemVerticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        ElevatedCard(
+                            modifier = Modifier
+                                .size(width = 400.dp, height = 650.dp)
+                                .padding(24.dp),
+                            shape = RoundedCornerShape(15),
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Image(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .align(Alignment.TopCenter),
+                                    painter = painterResource(Res.drawable.card1),
+                                    contentDescription = "Kubiki Image",
+                                    contentScale = ContentScale.Crop,
+                                )
+                                Text(
+                                    text = "Развивающие занятия",
+                                    style = TextStyle(
+                                        fontSize = 20.sp,
+                                        fontFamily = fontFamily,
+                                    )
+                                )
+                            }
+                        }
+                        ElevatedCard(
+                            modifier = Modifier
+                                .size(width = 400.dp, height = 650.dp)
+                                .padding(24.dp),
+                            shape = RoundedCornerShape(15),
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = "Развивающие занятия",
+                                    style = TextStyle(
+                                        fontSize = 20.sp,
+                                        fontFamily = fontFamily,
+                                    )
+                                )
+                            }
+                        }
+                        ElevatedCard(
+                            modifier = Modifier
+                                .size(width = 400.dp, height = 650.dp)
+                                .padding(24.dp),
+                            shape = RoundedCornerShape(15),
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = "Развивающие занятия",
+                                    style = TextStyle(
+                                        fontSize = 20.sp,
+                                        fontFamily = fontFamily,
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
             }
             BasicText(
                 text = "windowWidth: $windowWidth, windowHeight: $windowHeight",
@@ -139,7 +260,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
 }
 
 @Composable
-fun AppHeader(modifier: Modifier = Modifier) {
+private fun AppHeader(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
