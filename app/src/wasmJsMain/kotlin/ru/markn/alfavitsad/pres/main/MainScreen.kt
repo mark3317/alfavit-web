@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -44,8 +43,8 @@ import kotlin.math.absoluteValue
 @Composable
 fun IMainActions.MainScreen(state: MainUIState) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val windowWidth by remember { mutableStateOf(maxWidth) }
-        val windowHeight by remember { mutableStateOf(maxHeight) }
+        val windowWidth = maxWidth
+        val windowHeight = maxHeight
         val scrollState = rememberScrollState()
 
         Column(
@@ -77,15 +76,22 @@ fun IMainActions.MainScreen(state: MainUIState) {
                     AnimatedContent(
                         targetState = cardSelected,
                     ) {
-                        ExpandedInfoCard(
+                        Box(
                             modifier = Modifier
+                                .sharedBounds(
+                                    rememberSharedContentState(key = cardSelected),
+                                    animatedVisibilityScope = this@AnimatedContent,
+                                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                                )
                                 .fillMaxWidth()
-                                .height(400.dp),
-                            sharedTransitionScope = this@SharedTransitionLayout,
-                            animatedVisibilityScope = this@AnimatedContent,
-                            text = "Карта $cardSelected",
-                            key = cardSelected
-                        )
+                                .height(400.dp)
+                                .padding(32.dp),
+                        ) {
+                            ExpandedInfoCard(
+                                modifier = Modifier.matchParentSize(),
+                                text = "Карта $cardSelected",
+                            )
+                        }
                     }
                     Row(
                         modifier = Modifier
@@ -97,29 +103,24 @@ fun IMainActions.MainScreen(state: MainUIState) {
                         cardList.forEach { card ->
                             AnimatedVisibility(
                                 visible = card != cardSelected,
-                                enter = fadeIn() + scaleIn(),
-                                exit = fadeOut() + scaleOut(),
+                                enter = fadeIn(),
+                                exit = fadeOut(),
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .size(150.dp)
                                         .sharedBounds(
                                             sharedContentState = rememberSharedContentState(key = card),
-                                            animatedVisibilityScope = this,
-                                            clipInOverlayDuringTransition = OverlayClip(RectangleShape)
+                                            animatedVisibilityScope = this@AnimatedVisibility,
+                                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
                                         )
-                                        .sharedElement(
-                                            sharedContentState = rememberSharedContentState(key = card),
-                                            animatedVisibilityScope = this@AnimatedVisibility
-                                        )
+                                        .clickable {
+                                            cardSelected = card
+                                        }
                                 ) {
                                     InfoCard(
-                                        modifier = Modifier
-                                            .matchParentSize()
-                                            .clickable {
-                                                cardSelected = card
-                                            },
-                                        text = "Карта $card"
+                                        modifier = Modifier.matchParentSize(),
+                                        text = "Карта $card",
                                     )
                                 }
                             }
@@ -128,7 +129,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
                 }
             }
             BasicText(
-                text = "$state windowWidth: $windowWidth, windowHeight: $windowHeight",
+                text = "${state.title} windowWidth: $windowWidth, windowHeight: $windowHeight",
                 autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 20.sp),
             )
         }
@@ -136,10 +137,33 @@ fun IMainActions.MainScreen(state: MainUIState) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun InfoCard(
     modifier: Modifier = Modifier,
-    text: String
+    text: String,
+) {
+        ElevatedCard(
+            modifier = modifier,
+            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = text,
+                )
+            }
+        }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun ExpandedInfoCard(
+    modifier: Modifier = Modifier,
+    text: String,
 ) {
     ElevatedCard(
         modifier = modifier,
@@ -150,38 +174,9 @@ fun InfoCard(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = text)
-        }
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun ExpandedInfoCard(
-    modifier: Modifier = Modifier,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    text: String,
-    key: Int = -1
-) {
-    with(sharedTransitionScope) {
-        ElevatedCard(
-            modifier = modifier.sharedBounds(
-                rememberSharedContentState(key = key),
-                animatedVisibilityScope = animatedVisibilityScope,
-                enter = fadeIn() + scaleIn(),
-                exit = fadeOut() + scaleOut(),
-                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
-            ),
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = text)
-            }
+            Text(
+                text = text
+            )
         }
     }
 }
