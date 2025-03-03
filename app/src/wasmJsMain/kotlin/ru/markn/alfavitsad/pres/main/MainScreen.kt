@@ -3,10 +3,11 @@ package ru.markn.alfavitsad.pres.main
 import alfavit_web.app.generated.resources.Res
 import alfavit_web.app.generated.resources.home
 import alfavit_web.app.generated.resources.kubiki
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -93,41 +94,44 @@ fun IMainActions.MainScreen(state: MainUIState) {
                             .widthIn(min = 800.dp, max = 1200.dp),
                         verticalArrangement = Arrangement.Center,
                     ) {
-                        Box(
+                        Row(
                             modifier = Modifier
-                                .padding(16.dp)
                                 .fillMaxWidth()
-                                .height(400.dp)
-
+                                .height(400.dp),
                         ) {
                             cardList.forEach { card ->
-                                ExpandedInfoCard(
-                                    modifier = Modifier
-                                        .matchParentSize()
-                                        .sharedElementWithCallerManagedVisibility(
-                                            rememberSharedContentState(key = cardSelected),
-                                            cardSelected == card,
-                                        ),
-                                    text = "Карта $cardSelected",
-                                )
+                                AnimatedVisibility(
+                                    visible = cardSelected == card,
+                                ) {
+                                    ExpandedInfoCard(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .fillMaxSize()
+                                            .sharedElement(
+                                                rememberSharedContentState(key = card),
+                                                this@AnimatedVisibility,
+                                            ),
+                                        text = "Карта $cardSelected",
+                                    )
+                                }
                             }
                         }
-                        LazyRow(
-                            modifier = Modifier
-                                .padding(vertical = 16.dp)
-                                .wrapContentHeight()
-                                .fillMaxWidth(),
-                        ) {
+                        LazyRow {
                             items(items = cardList) { card ->
-                                AnimatedContent(
+                                AnimatedVisibility(
                                     modifier = Modifier.animateItem(),
-                                    targetState = card != cardSelected,
+                                    visible = cardSelected != card,
                                 ) {
-                                    CardItem(
-                                        card = card,
-                                        cardSelected = cardSelected,
-                                        sharedTransitionScope = this@SharedTransitionLayout,
-                                        onCardSelected = { cardSelected = card }
+                                    InfoCard(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .size(150.dp)
+                                            .sharedElement(
+                                                rememberSharedContentState(key = card),
+                                                this@AnimatedVisibility,
+                                            )
+                                            .clickable { cardSelected = card },
+                                        text = "Карта $card",
                                     )
                                 }
                             }
@@ -141,34 +145,6 @@ fun IMainActions.MainScreen(state: MainUIState) {
             )
         }
         AppHeader(modifier = Modifier.align(Alignment.TopCenter))
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun LazyItemScope.CardItem(
-    card: Int,
-    cardSelected: Int,
-    sharedTransitionScope: SharedTransitionScope,
-    onCardSelected: () -> Unit
-) {
-    with(sharedTransitionScope) {
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .size(150.dp)
-                .sharedElementWithCallerManagedVisibility(
-                    rememberSharedContentState(key = card),
-                    cardSelected != card,
-                ),
-        ) {
-            InfoCard(
-                modifier = Modifier
-                    .matchParentSize()
-                    .clickable { onCardSelected() },
-                text = "Карта $card",
-            )
-        }
     }
 }
 
