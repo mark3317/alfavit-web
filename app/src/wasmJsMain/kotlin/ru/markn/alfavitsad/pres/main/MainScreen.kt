@@ -6,6 +6,9 @@ import alfavit_web.app.generated.resources.kubiki
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -57,70 +60,74 @@ fun IMainActions.MainScreen(state: MainUIState) {
             AppBlockHome(windowHeight)
             AppBlockAbout()
             AppBlockActivities(windowWidth)
-            SharedTransitionLayout(
-                modifier = Modifier
-                    .height(700.dp)
-                    .fillMaxWidth()
-                    .background(color = Color(0xFF619B8A)),
-            ) {
+            SharedTransitionLayout {
                 var cardSelected by remember { mutableStateOf(0) }
                 var cardList = listOf(0, 1, 2, 3)
 
                 Column(
                     modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .height(700.dp)
+                        .background(color = Color(0xFF619B8A)),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AnimatedContent(
-                        targetState = cardSelected,
+                    Text(
+                        modifier = Modifier.padding(top = 52.dp),
+                        text = "Наш коллектив",
+                        style = TextStyle(
+                            textAlign = TextAlign.Center,
+                            fontSize = 46.sp,
+                            fontFamily = AppTheme.FontFamily,
+                            color = Color.White,
+                            shadow = Shadow(
+                                color = Color.Black,
+                                offset = Offset(2f, 2f),
+                                blurRadius = 4f
+                            )
+                        )
+                    )
+                    Column(
+                        modifier = Modifier
+                            .height(700.dp)
+                            .widthIn(min = 800.dp, max = 1200.dp),
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Box(
                             modifier = Modifier
-                                .sharedBounds(
-                                    rememberSharedContentState(key = cardSelected),
-                                    animatedVisibilityScope = this@AnimatedContent,
-                                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
-                                )
+                                .padding(16.dp)
                                 .fillMaxWidth()
                                 .height(400.dp)
-                                .padding(32.dp),
+
                         ) {
-                            ExpandedInfoCard(
-                                modifier = Modifier.matchParentSize(),
-                                text = "Карта $cardSelected",
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        cardList.forEach { card ->
-                            AnimatedVisibility(
-                                visible = card != cardSelected,
-                                enter = fadeIn(),
-                                exit = fadeOut(),
-                            ) {
-                                Box(
+                            cardList.forEach { card ->
+                                ExpandedInfoCard(
                                     modifier = Modifier
-                                        .size(150.dp)
-                                        .sharedBounds(
-                                            sharedContentState = rememberSharedContentState(key = card),
-                                            animatedVisibilityScope = this@AnimatedVisibility,
-                                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
-                                        )
-                                        .clickable {
-                                            cardSelected = card
-                                        }
+                                        .matchParentSize()
+                                        .sharedElementWithCallerManagedVisibility(
+                                            rememberSharedContentState(key = cardSelected),
+                                            cardSelected == card,
+                                        ),
+                                    text = "Карта $cardSelected",
+                                )
+                            }
+                        }
+                        LazyRow(
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .wrapContentHeight()
+                                .fillMaxWidth(),
+                        ) {
+                            items(items = cardList) { card ->
+                                AnimatedContent(
+                                    modifier = Modifier.animateItem(),
+                                    targetState = card != cardSelected,
                                 ) {
-                                    InfoCard(
-                                        modifier = Modifier.matchParentSize(),
-                                        text = "Карта $card",
+                                    CardItem(
+                                        card = card,
+                                        cardSelected = cardSelected,
+                                        sharedTransitionScope = this@SharedTransitionLayout,
+                                        onCardSelected = { cardSelected = card }
                                     )
                                 }
                             }
@@ -139,24 +146,52 @@ fun IMainActions.MainScreen(state: MainUIState) {
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
+fun LazyItemScope.CardItem(
+    card: Int,
+    cardSelected: Int,
+    sharedTransitionScope: SharedTransitionScope,
+    onCardSelected: () -> Unit
+) {
+    with(sharedTransitionScope) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .size(150.dp)
+                .sharedElementWithCallerManagedVisibility(
+                    rememberSharedContentState(key = card),
+                    cardSelected != card,
+                ),
+        ) {
+            InfoCard(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable { onCardSelected() },
+                text = "Карта $card",
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
 fun InfoCard(
     modifier: Modifier = Modifier,
     text: String,
 ) {
-        ElevatedCard(
-            modifier = modifier,
-            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+    ElevatedCard(
+        modifier = modifier,
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = text,
-                )
-            }
+            Text(
+                text = text,
+            )
         }
+    }
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
