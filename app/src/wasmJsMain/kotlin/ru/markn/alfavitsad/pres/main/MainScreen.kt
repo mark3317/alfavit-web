@@ -1,23 +1,22 @@
 package ru.markn.alfavitsad.pres.main
 
-import alfavit_web.app.generated.resources.Res
-import alfavit_web.app.generated.resources.home
-import alfavit_web.app.generated.resources.kubiki
+import alfavit_web.app.generated.resources.*
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,9 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import org.jetbrains.compose.resources.painterResource
-import ru.markn.alfavitsad.pres.utils.components.ActivityCard
-import ru.markn.alfavitsad.pres.utils.components.AppHeader
-import ru.markn.alfavitsad.pres.utils.components.AppTheme
+import ru.markn.alfavitsad.domain.models.Person
+import ru.markn.alfavitsad.pres.utils.components.*
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -62,13 +60,34 @@ fun IMainActions.MainScreen(state: MainUIState) {
             AppBlockAbout()
             AppBlockActivities(windowWidth)
             SharedTransitionLayout {
-                var cardSelected by remember { mutableStateOf(0) }
-                var cardList = listOf(0, 1, 2, 3)
+                val persons = listOf(
+                    Person(
+                        name = "Фоменко Анна",
+                        photo = Res.drawable.pers3,
+                        details = "Заведующая детского сада Алфавит. Имеет высшее экономическое образование по специальности «Финансы и Кредит». Окончила КГСХА. Имеет большой опыт работы в образовательной сфере, в частности в школе Английского языка. Рада помочь вам в любых вопросах связанных с нашим садом."
+                    ),
+                    Person(
+                        name = "Кудрявцева Юлия",
+                        photo = Res.drawable.pers1,
+                        details = "Преподаватель начальных классов. Проводит занятия «Подготовка к школе» как в группе, так и индивидуально. А также ведёт репетиторство по основным предметам начальной школы. Образование: 2 высших - ТМИ и ЮУрГУ. Имеет научную публикацию по теме детско-родительских отношений."
+                    ),
+                    Person(
+                        name = "Иванова Надежда",
+                        photo = Res.drawable.pers2,
+                        details = "Воспитатель старшей группы. Имеет высшее педагогическое образование, богатейший опыт работы с детьми начальных классов. Стаж работы с детьми более 28 лет. Специалист широкого профиля."
+                    ),
+                    Person(
+                        name = "Васютинская Анна",
+                        photo = Res.drawable.pers4,
+                        details = "Воспитатель младшей группы. Инструктор по физической культуре. Имеет высшее образование и 20-ти летний стаж работы в образовательной сфере. В работе с детьми использует методы соответствующие их возрастным и индивидуальным особенностям. Для повышения эффективности образования использует нестандартные формы занятий: занятия по физическому воспитанию. В различных видах деятельный развивает в своих воспитанниках творческие и интеллектуальные способности, умение логически мыслить, проявлять инициативу и самостоятельность."
+                    ),
+                )
+                var selectedPerson by remember { mutableStateOf(persons.first()) }
 
                 Column(
                     modifier = Modifier
+                        .wrapContentHeight()
                         .fillMaxWidth()
-                        .height(700.dp)
                         .background(color = Color(0xFF619B8A)),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -90,48 +109,46 @@ fun IMainActions.MainScreen(state: MainUIState) {
                     )
                     Column(
                         modifier = Modifier
-                            .height(700.dp)
+                            .fillMaxHeight(0.7f)
                             .widthIn(min = 800.dp, max = 1200.dp),
                         verticalArrangement = Arrangement.Center,
                     ) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(400.dp),
+                                .wrapContentHeight()
+                                .fillMaxWidth(),
                         ) {
-                            cardList.forEach { card ->
+                            persons.forEach { person ->
                                 AnimatedVisibility(
-                                    visible = cardSelected == card,
+                                    visible = selectedPerson == person,
                                 ) {
-                                    ExpandedInfoCard(
+                                    PersonDetailsCard(
                                         modifier = Modifier
                                             .padding(16.dp)
-                                            .fillMaxSize()
-                                            .sharedElement(
-                                                rememberSharedContentState(key = card),
-                                                this@AnimatedVisibility,
-                                            ),
-                                        text = "Карта $cardSelected",
+                                            .fillMaxSize(),
+                                        sharedTransitionScope = this@SharedTransitionLayout,
+                                        animationVisibilityScope = this@AnimatedVisibility,
+                                        person = person,
                                     )
                                 }
                             }
                         }
-                        LazyRow {
-                            items(items = cardList) { card ->
+                        LazyRow(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxHeight(0.3f),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(items = persons) { person ->
                                 AnimatedVisibility(
                                     modifier = Modifier.animateItem(),
-                                    visible = cardSelected != card,
+                                    visible = selectedPerson != person,
                                 ) {
-                                    InfoCard(
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .size(150.dp)
-                                            .sharedElement(
-                                                rememberSharedContentState(key = card),
-                                                this@AnimatedVisibility,
-                                            )
-                                            .clickable { cardSelected = card },
-                                        text = "Карта $card",
+                                    PersonCard(
+                                        sharedTransitionScope = this@SharedTransitionLayout,
+                                        animationVisibilityScope = this@AnimatedVisibility,
+                                        person = person,
+                                        onClick = { selectedPerson = person }
                                     )
                                 }
                             }
@@ -145,50 +162,6 @@ fun IMainActions.MainScreen(state: MainUIState) {
             )
         }
         AppHeader(modifier = Modifier.align(Alignment.TopCenter))
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun InfoCard(
-    modifier: Modifier = Modifier,
-    text: String,
-) {
-    ElevatedCard(
-        modifier = modifier,
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text,
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun ExpandedInfoCard(
-    modifier: Modifier = Modifier,
-    text: String,
-) {
-    ElevatedCard(
-        modifier = modifier,
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text
-            )
-        }
     }
 }
 
