@@ -4,12 +4,8 @@ import alfavit_web.app.generated.resources.Res
 import alfavit_web.app.generated.resources.alfavit
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +21,7 @@ fun AppHeader(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(68.dp)
             .background(Color.White),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -35,11 +31,10 @@ fun AppHeader(modifier: Modifier = Modifier) {
             contentDescription = "Alfavit Ico",
         )
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BasicText(
-                modifier = Modifier.padding(10.dp),
+            Text(
                 text = "О нас",
                 style = TextStyle(
                     fontSize = 20.sp,
@@ -47,8 +42,7 @@ fun AppHeader(modifier: Modifier = Modifier) {
                     fontFamily = AppTheme.FontFamily,
                 )
             )
-            BasicText(
-                modifier = Modifier.padding(10.dp),
+            Text(
                 text = "Тарифы",
                 style = TextStyle(
                     fontSize = 20.sp,
@@ -56,8 +50,7 @@ fun AppHeader(modifier: Modifier = Modifier) {
                     fontFamily = AppTheme.FontFamily,
                 )
             )
-            BasicText(
-                modifier = Modifier.padding(10.dp),
+            Text(
                 text = "Контакты",
                 style = TextStyle(
                     fontSize = 20.sp,
@@ -66,9 +59,9 @@ fun AppHeader(modifier: Modifier = Modifier) {
                 )
             )
         }
-        BasicText(
+        Text(
             modifier = Modifier.padding(10.dp),
-            text = "Header",
+            text = "VK",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,

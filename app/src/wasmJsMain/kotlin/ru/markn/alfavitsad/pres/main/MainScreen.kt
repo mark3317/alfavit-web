@@ -4,19 +4,15 @@ import alfavit_web.app.generated.resources.*
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,11 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import org.jetbrains.compose.resources.painterResource
+import ru.markn.alfavitsad.domain.models.Activity
 import ru.markn.alfavitsad.domain.models.Person
 import ru.markn.alfavitsad.pres.utils.components.*
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun IMainActions.MainScreen(state: MainUIState) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -56,106 +52,10 @@ fun IMainActions.MainScreen(state: MainUIState) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            AppBlockHome(windowHeight)
-            AppBlockAbout()
-            AppBlockActivities(windowWidth)
-            SharedTransitionLayout {
-                val persons = listOf(
-                    Person(
-                        name = "Фоменко Анна",
-                        photo = Res.drawable.pers3,
-                        details = "Заведующая детского сада Алфавит. Имеет высшее экономическое образование по специальности «Финансы и Кредит». Окончила КГСХА. Имеет большой опыт работы в образовательной сфере, в частности в школе Английского языка. Рада помочь вам в любых вопросах связанных с нашим садом."
-                    ),
-                    Person(
-                        name = "Кудрявцева Юлия",
-                        photo = Res.drawable.pers1,
-                        details = "Преподаватель начальных классов. Проводит занятия «Подготовка к школе» как в группе, так и индивидуально. А также ведёт репетиторство по основным предметам начальной школы. Образование: 2 высших - ТМИ и ЮУрГУ. Имеет научную публикацию по теме детско-родительских отношений."
-                    ),
-                    Person(
-                        name = "Иванова Надежда",
-                        photo = Res.drawable.pers2,
-                        details = "Воспитатель старшей группы. Имеет высшее педагогическое образование, богатейший опыт работы с детьми начальных классов. Стаж работы с детьми более 28 лет. Специалист широкого профиля."
-                    ),
-                    Person(
-                        name = "Васютинская Анна",
-                        photo = Res.drawable.pers4,
-                        details = "Воспитатель младшей группы. Инструктор по физической культуре. Имеет высшее образование и 20-ти летний стаж работы в образовательной сфере. В работе с детьми использует методы соответствующие их возрастным и индивидуальным особенностям. Для повышения эффективности образования использует нестандартные формы занятий: занятия по физическому воспитанию. В различных видах деятельный развивает в своих воспитанниках творческие и интеллектуальные способности, умение логически мыслить, проявлять инициативу и самостоятельность."
-                    ),
-                )
-                var selectedPerson by remember { mutableStateOf(persons.first()) }
-
-                Column(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth()
-                        .background(color = Color(0xFF619B8A)),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier.padding(top = 52.dp),
-                        text = "Наш коллектив",
-                        style = TextStyle(
-                            textAlign = TextAlign.Center,
-                            fontSize = 46.sp,
-                            fontFamily = AppTheme.FontFamily,
-                            color = Color.White,
-                            shadow = Shadow(
-                                color = Color.Black,
-                                offset = Offset(2f, 2f),
-                                blurRadius = 4f
-                            )
-                        )
-                    )
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight(0.7f)
-                            .widthIn(min = 800.dp, max = 1200.dp),
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .fillMaxWidth(),
-                        ) {
-                            persons.forEach { person ->
-                                AnimatedVisibility(
-                                    visible = selectedPerson == person,
-                                ) {
-                                    PersonDetailsCard(
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .fillMaxSize(),
-                                        sharedTransitionScope = this@SharedTransitionLayout,
-                                        animationVisibilityScope = this@AnimatedVisibility,
-                                        person = person,
-                                    )
-                                }
-                            }
-                        }
-                        LazyRow(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxHeight(0.3f),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            items(items = persons) { person ->
-                                AnimatedVisibility(
-                                    modifier = Modifier.animateItem(),
-                                    visible = selectedPerson != person,
-                                ) {
-                                    PersonCard(
-                                        sharedTransitionScope = this@SharedTransitionLayout,
-                                        animationVisibilityScope = this@AnimatedVisibility,
-                                        person = person,
-                                        onClick = { selectedPerson = person }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            BlockHome(windowHeight)
+            BlockAbout()
+            BlockActivities(windowWidth)
+            BlockTeam(windowWidth)
             BasicText(
                 text = "${state.title} windowWidth: $windowWidth, windowHeight: $windowHeight",
                 autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 20.sp),
@@ -166,7 +66,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
 }
 
 @Composable
-fun AppBlockHome(windowHeight: Dp) {
+fun BlockHome(windowHeight: Dp) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -234,7 +134,7 @@ fun AppBlockHome(windowHeight: Dp) {
 }
 
 @Composable
-fun AppBlockAbout() {
+fun BlockAbout() {
     Box(
         modifier = Modifier
             .wrapContentHeight()
@@ -277,7 +177,39 @@ fun AppBlockAbout() {
 }
 
 @Composable
-fun AppBlockActivities(windowWidth: Dp) {
+fun BlockActivities(windowWidth: Dp) {
+    val activities = listOf(
+        Activity(
+            image = Res.drawable.activity1,
+            title = "Развивающие занятия",
+            description = "Развитие речи, рисование, лепка, аппликация, математическое развитие, окружающий мир, музыка, физкультура"
+        ),
+        Activity(
+            image = Res.drawable.activity2,
+            title = "Подготовка к школе",
+            description = "Подготовка к школе, развитие речи, математическое развитие, окружающий мир, музыка, физкультура"
+        ),
+        Activity(
+            image = Res.drawable.activity3,
+            title = "Развитие речи",
+            description = "Развитие речи, логопедические занятия, подготовка к школе, математическое развитие, окружающий мир, музыка, физкультура"
+        ),
+        Activity(
+            image = Res.drawable.activity4,
+            title = "Развитие логики",
+            description = "Развитие логики, математическое развитие, окружающий мир, музыка, физкультура"
+        ),
+        Activity(
+            image = Res.drawable.activity5,
+            title = "Развитие мелкой моторики",
+            description = "Развитие мелкой моторики, математическое развитие, окружающий мир, музыка, физкультура"
+        ),
+        Activity(
+            image = Res.drawable.activity6,
+            title = "Развитие музыкального слуха",
+            description = "Развитие музыкального слуха, математическое развитие, окружающий мир, музыка, физкультура"
+        ),
+    )
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -298,7 +230,7 @@ fun AppBlockActivities(windowWidth: Dp) {
             modifier = Modifier.padding(vertical = 36.dp)
         ) {
             if (windowWidth < 920.dp) {
-                val pagerState = rememberPagerState(pageCount = { 6 })
+                val pagerState = rememberPagerState(pageCount = activities::size)
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier
@@ -313,14 +245,15 @@ fun AppBlockActivities(windowWidth: Dp) {
                         1f - ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue.coerceIn(0f, 1f)
                     ActivityCard(
                         modifier = Modifier
-                            .size(width = 300.dp, height = (450 + (50 * percentPageOffset)).dp)
+                            .size(width = 300.dp, height = (420 + (50 * percentPageOffset)).dp)
                             .graphicsLayer {
                                 alpha = lerp(
                                     start = 0.5f,
                                     stop = 1f,
                                     fraction = percentPageOffset
                                 )
-                            }
+                            },
+                        activity = activities[page]
                     )
                 }
                 Row(
@@ -348,9 +281,132 @@ fun AppBlockActivities(windowWidth: Dp) {
                     verticalArrangement = Arrangement.spacedBy(36.dp),
                     itemVerticalAlignment = Alignment.CenterVertically,
                 ) {
-                    repeat(times = 6) {
+                    activities.forEach { activity ->
                         ActivityCard(
-                            modifier = Modifier.size(width = 300.dp, height = 500.dp)
+                            modifier = Modifier.size(width = 300.dp, height = 470.dp),
+                            activity = activity
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun BlockTeam(windowWidth: Dp) {
+    SharedTransitionLayout {
+        val persons = listOf(
+            Person(
+                name = "Фоменко Анна",
+                photo = Res.drawable.pers3,
+                post = "Заведующая детского сада Алфавит",
+                details = "Имеет высшее экономическое образование по специальности «Финансы и Кредит». Окончила КГСХА. Имеет большой опыт работы в образовательной сфере, в частности в школе Английского языка. Рада помочь вам в любых вопросах связанных с нашим садом."
+            ),
+            Person(
+                name = "Кудрявцева Юлия",
+                photo = Res.drawable.pers1,
+                post = "Преподаватель начальных классов",
+                details = "Проводит занятия «Подготовка к школе» как в группе, так и индивидуально. А также ведёт репетиторство по основным предметам начальной школы. Образование: 2 высших - ТМИ и ЮУрГУ. Имеет научную публикацию по теме детско-родительских отношений."
+            ),
+            Person(
+                name = "Иванова Надежда",
+                photo = Res.drawable.pers2,
+                post = "Воспитатель старшей группы",
+                details = "Имеет высшее педагогическое образование, богатейший опыт работы с детьми начальных классов. Стаж работы с детьми более 28 лет. Специалист широкого профиля."
+            ),
+            Person(
+                name = "Васютинская Анна",
+                photo = Res.drawable.pers4,
+                post = "Воспитатель младшей группы",
+                details = "Инструктор по физической культуре. Имеет высшее образование и 20-ти летний стаж работы в образовательной сфере. Для повышения эффективности образования использует нестандартные формы занятий: занятия по физическому воспитанию. В различных видах деятельный развивает в своих воспитанниках творческие и интеллектуальные способности, умение логически мыслить, проявлять инициативу и самостоятельность."
+            ),
+            Person(
+                name = "Гусейнова Дурдана",
+                photo = Res.drawable.pers5,
+                post = "Помощник воспитателя",
+                details = "Образование: среднее специальное. Стаж работы помощником воспитателя более 1 года."
+            ),
+            Person(
+                name = "Сеидова Руфана",
+                photo = Res.drawable.pers6,
+                post = "Помощник воспитателя",
+                details = "Образование: среднее. Стаж работы помощником воспитателя более 1 года."
+            ),
+        )
+        var selectedPerson by remember { mutableStateOf(persons.first()) }
+
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .background(color = Color(0xFF619B8A))
+                .padding(vertical = 32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 16.dp),
+                text = "Наш коллектив",
+                style = TextStyle(
+                    textAlign = TextAlign.Center,
+                    fontSize = 46.sp,
+                    fontFamily = AppTheme.FontFamily,
+                    color = Color.White,
+                    shadow = Shadow(
+                        color = Color.Black,
+                        offset = Offset(2f, 2f),
+                        blurRadius = 4f
+                    )
+                )
+            )
+            Row(
+                modifier = Modifier
+                    .width(1100.dp)
+                    .animateContentSize(),
+            ) {
+                persons.forEach { person ->
+                    AnimatedVisibility(
+                        visible = selectedPerson == person,
+                    ) {
+                        if (windowWidth < 920.dp) {
+                            PersonDetailsPortraitCard(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animationVisibilityScope = this@AnimatedVisibility,
+                                person = person,
+                            )
+                        } else {
+                            PersonDetailsCard(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animationVisibilityScope = this@AnimatedVisibility,
+                                person = person,
+                            )
+                        }
+                    }
+                }
+            }
+            val scrollState = rememberScrollState()
+            Row(
+                modifier = Modifier.horizontalScroll(scrollState),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                persons.forEach { person ->
+                    AnimatedVisibility(
+                        visible = selectedPerson != person,
+                    ) {
+                        PersonCard(
+                            modifier = Modifier.width(210.dp),
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animationVisibilityScope = this@AnimatedVisibility,
+                            person = person,
+                            onClick = { selectedPerson = person }
                         )
                     }
                 }

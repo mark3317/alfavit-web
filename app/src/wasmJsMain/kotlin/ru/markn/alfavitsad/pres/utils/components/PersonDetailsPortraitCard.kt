@@ -26,18 +26,15 @@ import ru.markn.alfavitsad.domain.models.Person
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PersonCard(
+fun PersonDetailsPortraitCard(
     modifier: Modifier = Modifier,
     sharedTransitionScope: SharedTransitionScope,
     animationVisibilityScope: AnimatedVisibilityScope,
     person: Person,
-    onClick: () -> Unit,
 ) {
     with(sharedTransitionScope) {
         ElevatedCard(
             modifier = modifier
-                .padding(horizontal = 8.dp)
-                .height(80.dp)
                 .sharedBounds(
                     rememberSharedContentState(
                         key = PersonSharedKey(
@@ -49,20 +46,23 @@ fun PersonCard(
                 ),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
-            shape = RoundedCornerShape(50),
-            onClick = onClick
+            shape = RoundedCornerShape(20),
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
                 Image(
                     painter = painterResource(person.photo),
                     contentDescription = "Person Photo",
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .aspectRatio(1f)
-                        .sharedBounds(
+                        .padding(16.dp)
+                        .size(200.dp)
+                        .sharedElement(
                             rememberSharedContentState(
                                 key = PersonSharedKey(
                                     person.name,
@@ -73,16 +73,14 @@ fun PersonCard(
                         )
                         .clip(CircleShape)
                         .border(
-                            width = 4.dp,
+                            width = 6.dp,
                             color = Color(0xFF233D4D),
                             shape = CircleShape
-                        )
-                    ,
+                        ),
                     contentScale = ContentScale.Crop
                 )
                 Text(
                     modifier = Modifier
-                        .padding(8.dp)
                         .sharedBounds(
                             rememberSharedContentState(
                                 key = PersonSharedKey(
@@ -93,10 +91,28 @@ fun PersonCard(
                             animationVisibilityScope,
                         ),
                     text = person.name,
+                    maxLines = 1,
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 40.sp,
                         textAlign = TextAlign.Center,
                         fontFamily = AppTheme.FontFamily,
+                    )
+                )
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = person.post,
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    text = person.details,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 24.sp,
+                        textAlign = TextAlign.Center,
                     )
                 )
             }

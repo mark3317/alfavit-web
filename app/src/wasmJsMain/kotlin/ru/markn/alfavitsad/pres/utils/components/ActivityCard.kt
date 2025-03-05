@@ -1,7 +1,5 @@
 package ru.markn.alfavitsad.pres.utils.components
 
-import alfavit_web.app.generated.resources.Res
-import alfavit_web.app.generated.resources.card1
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,10 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
+import ru.markn.alfavitsad.domain.models.Activity
 
 @Composable
 fun ActivityCard(
     modifier: Modifier = Modifier,
+    activity: Activity,
 ) {
     Card(
         modifier = modifier,
@@ -41,7 +41,7 @@ fun ActivityCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.4f),
-                painter = painterResource(Res.drawable.card1),
+                painter = painterResource(activity.image),
                 contentDescription = "Kubiki Image",
                 contentScale = ContentScale.Crop,
             )
@@ -53,7 +53,7 @@ fun ActivityCard(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = "Развивающие занятия",
+                    text = activity.title,
                     textAlign = TextAlign.Center,
                     style = TextStyle(
                         fontSize = 26.sp,
@@ -61,7 +61,7 @@ fun ActivityCard(
                     )
                 )
                 Text(
-                    text = "Развитие речи, рисование, лепка, аппликация, математическое развитие, окружающий мир, музыка, физкультура",
+                    text = activity.description,
                     style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 28.sp,
