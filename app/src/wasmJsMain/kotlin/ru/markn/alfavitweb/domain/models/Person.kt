@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.domain.models
+package ru.markn.alfavitweb.domain.models
 
 import org.jetbrains.compose.resources.DrawableResource
 

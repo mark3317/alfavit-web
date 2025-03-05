@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.components
+package ru.markn.alfavitweb.pres.components.shared
 
 data class PersonSharedKey(
     val name: String,

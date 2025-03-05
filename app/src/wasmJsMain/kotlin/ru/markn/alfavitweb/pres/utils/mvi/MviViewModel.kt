@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.mvi
+package ru.markn.alfavitweb.pres.utils.mvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

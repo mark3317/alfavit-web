@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.components
+package ru.markn.alfavitweb.pres.components
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import ru.markn.alfavitsad.domain.models.Person
+import ru.markn.alfavitweb.domain.models.Person
+import ru.markn.alfavitweb.pres.utils.AppTheme
+import ru.markn.alfavitweb.pres.components.shared.PersonSharedKey
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -43,6 +45,11 @@ fun PersonDetailsPortraitCard(
                         )
                     ),
                     animationVisibilityScope,
+                )
+                .border(
+                    width = 6.dp,
+                    color = Color(0xFF233D4D),
+                    shape = RoundedCornerShape(20)
                 ),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),

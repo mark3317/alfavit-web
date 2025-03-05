@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.mvi
+package ru.markn.alfavitweb.pres.utils.mvi
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

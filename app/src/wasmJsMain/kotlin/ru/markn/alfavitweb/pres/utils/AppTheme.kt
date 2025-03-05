@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.components
+package ru.markn.alfavitweb.pres.utils
 
 import alfavit_web.app.generated.resources.Res
 import alfavit_web.app.generated.resources.reminder_bold

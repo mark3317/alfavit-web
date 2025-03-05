@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.components
+package ru.markn.alfavitweb.pres.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import ru.markn.alfavitsad.domain.models.Activity
+import ru.markn.alfavitweb.domain.models.Activity
+import ru.markn.alfavitweb.pres.utils.AppTheme
 
 @Composable
 fun ActivityCard(

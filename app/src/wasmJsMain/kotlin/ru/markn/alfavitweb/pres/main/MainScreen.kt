@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.main
+package ru.markn.alfavitweb.pres.main
 
 import alfavit_web.app.generated.resources.*
 import androidx.compose.animation.AnimatedVisibility
@@ -11,8 +11,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,9 +36,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import org.jetbrains.compose.resources.painterResource
-import ru.markn.alfavitsad.domain.models.Activity
-import ru.markn.alfavitsad.domain.models.Person
-import ru.markn.alfavitsad.pres.utils.components.*
+import ru.markn.alfavitweb.domain.models.Activity
+import ru.markn.alfavitweb.domain.models.Person
+import ru.markn.alfavitweb.domain.models.Service
+import ru.markn.alfavitweb.pres.components.*
+import ru.markn.alfavitweb.pres.utils.AppTheme
 import kotlin.math.absoluteValue
 
 @Composable
@@ -56,12 +61,157 @@ fun IMainActions.MainScreen(state: MainUIState) {
             BlockAbout()
             BlockActivities(windowWidth)
             BlockTeam(windowWidth)
+
+            val services = listOf(
+                Service(
+                    image = Res.drawable.service1,
+                    title = "Группа полного дня",
+                    color = Color(0xFFFE7F2D),
+                    price = 19500
+                ),
+                Service(
+                    image = Res.drawable.service2,
+                    title = "Группа неполного дня",
+                    color = Color(0xFFFCCA46),
+                    price = 15000
+                ),
+                Service(
+                    image = Res.drawable.service3,
+                    title = "Единоразовое посещение",
+                    color = Color(0xFF619B8A),
+                    price = 1300
+                ),
+                Service(
+                    image = Res.drawable.service4,
+                    title = "Адаптация",
+                    color = Color(0xFF37AE48),
+                    price = 250
+                ),
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color(0xFFF5F5F5))
+                    .padding(vertical = 32.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    text = "Наши услуги",
+                    style = TextStyle(
+                        fontSize = 46.sp,
+                        fontFamily = AppTheme.FontFamily,
+                    )
+                )
+                if (windowWidth < 920.dp) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        services.forEach { service ->
+                            ServiceCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(120.dp),
+                                service = service,
+                                onClick = {}
+                            )
+                        }
+                    }
+                } else {
+                    FlowRow(
+                        modifier = Modifier
+                            .padding(horizontal = 64.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.Center,
+                        itemVerticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        services.forEach { service ->
+                            ServiceCard(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .size(width = 430.dp, height = 180.dp),
+                                service = service,
+                                onClick = {}
+                            )
+                        }
+                    }
+                }
+            }
             BasicText(
                 text = "${state.title} windowWidth: $windowWidth, windowHeight: $windowHeight",
                 autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 20.sp),
             )
         }
-        AppHeader(modifier = Modifier.align(Alignment.TopCenter))
+        ScreenHeader(modifier = Modifier.align(Alignment.TopCenter))
+    }
+}
+
+@Composable
+fun ServiceCard(
+    modifier: Modifier = Modifier,
+    service: Service,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = modifier,
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 8.dp,
+            hoveredElevation = 16.dp,
+        ),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(20),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Image(
+                painter = painterResource(service.image),
+                contentDescription = "Service Image",
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(24.dp))
+                    .border(
+                        width = 6.dp,
+                        color = service.color,
+                        shape = RoundedCornerShape(24.dp)
+                    ),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = service.title,
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                    )
+                )
+                Text(
+                    text = "${service.price} ₽",
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -214,79 +364,76 @@ fun BlockActivities(windowWidth: Dp) {
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .background(color = Color(0xFFF5F5F5)),
+            .background(color = Color(0xFFF5F5F5))
+            .padding(vertical = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            modifier = Modifier.padding(top = 52.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 28.dp),
             text = "Наши занятия",
             style = TextStyle(
                 fontSize = 46.sp,
                 fontFamily = AppTheme.FontFamily,
             )
         )
-        Column(
-            modifier = Modifier.padding(vertical = 36.dp)
-        ) {
-            if (windowWidth < 920.dp) {
-                val pagerState = rememberPagerState(pageCount = activities::size)
-                HorizontalPager(
-                    state = pagerState,
+        if (windowWidth < 920.dp) {
+            val pagerState = rememberPagerState(pageCount = activities::size)
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(520.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                contentPadding = PaddingValues(horizontal = windowWidth / 2 - 150.dp),
+                pageSpacing = 24.dp,
+                pageSize = PageSize.Fixed(300.dp)
+            ) { page ->
+                val percentPageOffset =
+                    1f - ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue.coerceIn(0f, 1f)
+                ActivityCard(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(520.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    contentPadding = PaddingValues(horizontal = windowWidth / 2 - 150.dp),
-                    pageSpacing = 24.dp,
-                    pageSize = PageSize.Fixed(300.dp)
-                ) { page ->
-                    val percentPageOffset =
-                        1f - ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue.coerceIn(0f, 1f)
-                    ActivityCard(
+                        .size(width = 300.dp, height = (420 + (50 * percentPageOffset)).dp)
+                        .graphicsLayer {
+                            alpha = lerp(
+                                start = 0.5f,
+                                stop = 1f,
+                                fraction = percentPageOffset
+                            )
+                        },
+                    activity = activities[page]
+                )
+            }
+            Row(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(pagerState.pageCount) { iteration ->
+                    val color = if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                    Box(
                         modifier = Modifier
-                            .size(width = 300.dp, height = (420 + (50 * percentPageOffset)).dp)
-                            .graphicsLayer {
-                                alpha = lerp(
-                                    start = 0.5f,
-                                    stop = 1f,
-                                    fraction = percentPageOffset
-                                )
-                            },
-                        activity = activities[page]
+                            .padding(2.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(8.dp)
                     )
                 }
-                Row(
-                    Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    repeat(pagerState.pageCount) { iteration ->
-                        val color = if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                        Box(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .clip(CircleShape)
-                                .background(color)
-                                .size(8.dp)
-                        )
-                    }
-                }
-            } else {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(0.7f),
-                    horizontalArrangement = Arrangement.spacedBy(36.dp, Alignment.CenterHorizontally),
-                    verticalArrangement = Arrangement.spacedBy(36.dp),
-                    itemVerticalAlignment = Alignment.CenterVertically,
-                ) {
-                    activities.forEach { activity ->
-                        ActivityCard(
-                            modifier = Modifier.size(width = 300.dp, height = 470.dp),
-                            activity = activity
-                        )
-                    }
+            }
+        } else {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                horizontalArrangement = Arrangement.spacedBy(36.dp, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(36.dp),
+                itemVerticalAlignment = Alignment.CenterVertically,
+            ) {
+                activities.forEach { activity ->
+                    ActivityCard(
+                        modifier = Modifier.size(width = 300.dp, height = 470.dp),
+                        activity = activity
+                    )
                 }
             }
         }

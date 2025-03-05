@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.components
+package ru.markn.alfavitweb.pres.components
 
 import alfavit_web.app.generated.resources.Res
 import alfavit_web.app.generated.resources.alfavit
@@ -15,9 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
+import ru.markn.alfavitweb.pres.utils.AppTheme
 
 @Composable
-fun AppHeader(modifier: Modifier = Modifier) {
+fun ScreenHeader(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()

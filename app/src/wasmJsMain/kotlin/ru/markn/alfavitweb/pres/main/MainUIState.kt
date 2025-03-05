@@ -1,6 +1,6 @@
-package ru.markn.alfavitsad.pres.main
+package ru.markn.alfavitweb.pres.main
 
-import ru.markn.alfavitsad.pres.utils.mvi.IMviState
+import ru.markn.alfavitweb.pres.utils.mvi.IMviState
 
 data class MainUIState(
     val title: String = "Детский сад «Алфавит»",

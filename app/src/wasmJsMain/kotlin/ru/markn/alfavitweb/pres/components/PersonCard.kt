@@ -1,4 +1,4 @@
-package ru.markn.alfavitsad.pres.utils.components
+package ru.markn.alfavitweb.pres.components
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -22,34 +22,45 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import ru.markn.alfavitsad.domain.models.Person
+import ru.markn.alfavitweb.domain.models.Person
+import ru.markn.alfavitweb.pres.utils.AppTheme
+import ru.markn.alfavitweb.pres.components.shared.PersonSharedKey
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PersonDetailsCard(
+fun PersonCard(
     modifier: Modifier = Modifier,
     sharedTransitionScope: SharedTransitionScope,
     animationVisibilityScope: AnimatedVisibilityScope,
     person: Person,
+    onClick: () -> Unit,
 ) {
     with(sharedTransitionScope) {
         ElevatedCard(
             modifier = modifier
+                .padding(horizontal = 8.dp)
+                .height(80.dp)
                 .sharedBounds(
-                    rememberSharedContentState(key = PersonSharedKey(
-                        person.name,
-                        PersonSharedKey.SharedElementType.Bounds
-                    )),
+                    rememberSharedContentState(
+                        key = PersonSharedKey(
+                            person.name,
+                            PersonSharedKey.SharedElementType.Bounds
+                        )
+                    ),
                     animationVisibilityScope,
+                )
+                .border(
+                    width = 4.dp,
+                    color = Color(0xFF233D4D),
+                    shape = CircleShape
                 ),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             shape = RoundedCornerShape(50),
+            onClick = onClick
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 350.dp),
+                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
@@ -58,63 +69,43 @@ fun PersonDetailsCard(
                     modifier = Modifier
                         .fillMaxHeight()
                         .aspectRatio(1f)
-                        .sharedElement(
-                            rememberSharedContentState(key = PersonSharedKey(
-                                person.name,
-                                PersonSharedKey.SharedElementType.Photo
-                            )),
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = PersonSharedKey(
+                                    person.name,
+                                    PersonSharedKey.SharedElementType.Photo
+                                )
+                            ),
                             animationVisibilityScope,
                         )
                         .clip(CircleShape)
                         .border(
-                            width = 6.dp,
+                            width = 4.dp,
                             color = Color(0xFF233D4D),
                             shape = CircleShape
-                        ),
+                        )
+                    ,
                     contentScale = ContentScale.Crop
                 )
-                Column(
+                Text(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .sharedBounds(
-                                rememberSharedContentState(key = PersonSharedKey(
+                        .padding(8.dp)
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = PersonSharedKey(
                                     person.name,
                                     PersonSharedKey.SharedElementType.Name
-                                )),
-                                animationVisibilityScope,
+                                )
                             ),
-                        text = person.name,
-                        maxLines = 1,
-                        style = TextStyle(
-                            fontSize = 46.sp,
-                            textAlign = TextAlign.Center,
-                            fontFamily = AppTheme.FontFamily,
-                        )
+                            animationVisibilityScope,
+                        ),
+                    text = person.name,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = AppTheme.FontFamily,
                     )
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp, bottom = 32.dp),
-                        text = person.post,
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            textAlign = TextAlign.Center,
-                        )
-                    )
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        text = person.details,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            textAlign = TextAlign.Center,
-                        )
-                    )
-                }
+                )
             }
         }
     }
