@@ -7,5 +7,6 @@ data class Service(
     val image: DrawableResource,
     val color: Color,
     val title: String,
-    val price: Int,
+    val description: String,
+    val price: String,
 )

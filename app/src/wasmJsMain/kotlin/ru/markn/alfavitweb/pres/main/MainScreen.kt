@@ -6,16 +6,14 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,10 +29,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import ru.markn.alfavitweb.domain.models.Activity
 import ru.markn.alfavitweb.domain.models.Person
@@ -46,8 +46,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun IMainActions.MainScreen(state: MainUIState) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val windowWidth = maxWidth
-        val windowHeight = maxHeight
+        windowSizeChanged(maxWidth, maxHeight)
         val scrollState = rememberScrollState()
 
         Column(
@@ -57,94 +56,14 @@ fun IMainActions.MainScreen(state: MainUIState) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            BlockHome(windowHeight)
-            BlockAbout()
-            BlockActivities(windowWidth)
-            BlockTeam(windowWidth)
+            BlockHome(state)
+            BlockAbout(state)
+            BlockActivities(state)
+            BlockTeam(state)
+            BlockServices(state)
 
-            val services = listOf(
-                Service(
-                    image = Res.drawable.service1,
-                    title = "Группа полного дня",
-                    color = Color(0xFFFE7F2D),
-                    price = 19500
-                ),
-                Service(
-                    image = Res.drawable.service2,
-                    title = "Группа неполного дня",
-                    color = Color(0xFFFCCA46),
-                    price = 15000
-                ),
-                Service(
-                    image = Res.drawable.service3,
-                    title = "Единоразовое посещение",
-                    color = Color(0xFF619B8A),
-                    price = 1300
-                ),
-                Service(
-                    image = Res.drawable.service4,
-                    title = "Адаптация",
-                    color = Color(0xFF37AE48),
-                    price = 250
-                ),
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color(0xFFF5F5F5))
-                    .padding(vertical = 32.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    text = "Наши услуги",
-                    style = TextStyle(
-                        fontSize = 46.sp,
-                        fontFamily = AppTheme.FontFamily,
-                    )
-                )
-                if (windowWidth < 920.dp) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        services.forEach { service ->
-                            ServiceCard(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(120.dp),
-                                service = service,
-                                onClick = {}
-                            )
-                        }
-                    }
-                } else {
-                    FlowRow(
-                        modifier = Modifier
-                            .padding(horizontal = 64.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalArrangement = Arrangement.Center,
-                        itemVerticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        services.forEach { service ->
-                            ServiceCard(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .size(width = 430.dp, height = 180.dp),
-                                service = service,
-                                onClick = {}
-                            )
-                        }
-                    }
-                }
-            }
             BasicText(
-                text = "${state.title} windowWidth: $windowWidth, windowHeight: $windowHeight",
+                text = "${state.title} windowWidth: ${state.window.width}, windowHeight: ${state.window.height}",
                 autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 20.sp),
             )
         }
@@ -153,70 +72,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
 }
 
 @Composable
-fun ServiceCard(
-    modifier: Modifier = Modifier,
-    service: Service,
-    onClick: () -> Unit
-) {
-    ElevatedCard(
-        modifier = modifier,
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 8.dp,
-            hoveredElevation = 16.dp,
-        ),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(20),
-        onClick = onClick
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Image(
-                painter = painterResource(service.image),
-                contentDescription = "Service Image",
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(24.dp))
-                    .border(
-                        width = 6.dp,
-                        color = service.color,
-                        shape = RoundedCornerShape(24.dp)
-                    ),
-                contentScale = ContentScale.Crop
-            )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    text = service.title,
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                    )
-                )
-                Text(
-                    text = "${service.price} ₽",
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun BlockHome(windowHeight: Dp) {
+fun IMainActions.BlockHome(state: MainUIState) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,7 +82,7 @@ fun BlockHome(windowHeight: Dp) {
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(windowHeight)
+                .height(state.window.height)
                 .drawWithContent {
                     drawContent()
                     drawRect(Color.Black.copy(alpha = 0.5f))
@@ -284,7 +140,7 @@ fun BlockHome(windowHeight: Dp) {
 }
 
 @Composable
-fun BlockAbout() {
+fun IMainActions.BlockAbout(state: MainUIState) {
     Box(
         modifier = Modifier
             .wrapContentHeight()
@@ -327,7 +183,7 @@ fun BlockAbout() {
 }
 
 @Composable
-fun BlockActivities(windowWidth: Dp) {
+fun IMainActions.BlockActivities(state: MainUIState) {
     val activities = listOf(
         Activity(
             image = Res.drawable.activity1,
@@ -377,7 +233,8 @@ fun BlockActivities(windowWidth: Dp) {
                 fontFamily = AppTheme.FontFamily,
             )
         )
-        if (windowWidth < 920.dp) {
+        if (state.window.isMobileVersion) {
+            val coroutineScope = rememberCoroutineScope()
             val pagerState = rememberPagerState(pageCount = activities::size)
             HorizontalPager(
                 state = pagerState,
@@ -385,7 +242,7 @@ fun BlockActivities(windowWidth: Dp) {
                     .fillMaxWidth()
                     .height(520.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(horizontal = windowWidth / 2 - 150.dp),
+                contentPadding = PaddingValues(horizontal = state.window.width / 2 - 150.dp),
                 pageSpacing = 24.dp,
                 pageSize = PageSize.Fixed(300.dp)
             ) { page ->
@@ -400,6 +257,14 @@ fun BlockActivities(windowWidth: Dp) {
                                 stop = 1f,
                                 fraction = percentPageOffset
                             )
+                        }
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(page)
+                            }
                         },
                     activity = activities[page]
                 )
@@ -424,10 +289,9 @@ fun BlockActivities(windowWidth: Dp) {
             }
         } else {
             FlowRow(
-                modifier = Modifier.fillMaxWidth(0.7f),
                 horizontalArrangement = Arrangement.spacedBy(36.dp, Alignment.CenterHorizontally),
                 verticalArrangement = Arrangement.spacedBy(36.dp),
-                itemVerticalAlignment = Alignment.CenterVertically,
+                maxItemsInEachRow = 3
             ) {
                 activities.forEach { activity ->
                     ActivityCard(
@@ -442,7 +306,7 @@ fun BlockActivities(windowWidth: Dp) {
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun BlockTeam(windowWidth: Dp) {
+fun IMainActions.BlockTeam(state: MainUIState) {
     SharedTransitionLayout {
         val persons = listOf(
             Person(
@@ -508,7 +372,7 @@ fun BlockTeam(windowWidth: Dp) {
                     )
                 )
             )
-            Row(
+            Column(
                 modifier = Modifier
                     .width(1100.dp)
                     .animateContentSize(),
@@ -517,7 +381,7 @@ fun BlockTeam(windowWidth: Dp) {
                     AnimatedVisibility(
                         visible = selectedPerson == person,
                     ) {
-                        if (windowWidth < 920.dp) {
+                        if (state.window.isMobileVersion) {
                             PersonDetailsPortraitCard(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -558,6 +422,141 @@ fun BlockTeam(windowWidth: Dp) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun IMainActions.BlockServices(state: MainUIState) {
+    val services = listOf(
+        Service(
+            image = Res.drawable.service1,
+            title = "Группа полного дня",
+            color = Color(0xFFFE7F2D),
+            description = "Группа полного дня с 07:30 до 19:00\n" +
+                    "\n" +
+                    "В стоимость входит:\n" +
+                    "- Уход и присмотр за детьми;\n" +
+                    "- 5-ти разовое вкусное питание;\n" +
+                    "- Развивающие и творческие занятия;\n" +
+                    "- Прогулки на свежем воздухе;\n" +
+                    "- Тематические мероприятия.\n" +
+                    "\n" +
+                    "Младшая группа с 1 года до 3-х лет.\n" +
+                    "Старшая группа с 4-х лет до 6-7 лет (с уклоном на подготовку к школе: обучение счёту, письму, чтению,окружающему миру).",
+            price = "19500 ₽"
+        ),
+        Service(
+            image = Res.drawable.service2,
+            title = "Группа неполного дня",
+            color = Color(0xFFFCCA46),
+            description = "Группа неполного дня с 07:30 до 15:00.\n" +
+                    "\n" +
+                    "В стоимость входит:\n" +
+                    "- Уход и присмотр за детьми;\n" +
+                    "- Питание;\n" +
+                    "- Развивающие и творческие занятия;\n" +
+                    "- Прогулки на свежем воздухе;\n" +
+                    "- Тематические мероприятия.\n" +
+                    "\n" +
+                    "Младшая группа с 1 года до 3-х лет.\n" +
+                    "Старшая группа с 4-х лет до 6-7 лет (с уклоном на подготовку к школе: обучение счёту, письму, чтению,окружающему миру).",
+            price = "15000 ₽"
+        ),
+        Service(
+            image = Res.drawable.service3,
+            title = "Единоразовое посещение",
+            color = Color(0xFF619B8A),
+            description = "Единоразовое посещение детского сада без покупки абонемента (к примеру, раз/два в неделю).\n" +
+                    "\n" +
+                    "В стоимость входит:\n" +
+                    "- Уход и присмотр за детьми;\n" +
+                    "- Питание;\n" +
+                    "- Развивающие и творческие занятия;\n" +
+                    "- Прогулки на свежем воздухе;\n" +
+                    "- Тематические мероприятия.\n" +
+                    "\n" +
+                    "Младшая группа с 1 года до 3-х лет.\n" +
+                    "Старшая группа с 4-х лет до 6-7 лет с уклоном на подготовку к школе: обучение письму, чтению, счёту, окружающему миру и т.д.",
+            price = "1300 ₽"
+        ),
+        Service(
+            image = Res.drawable.service4,
+            title = "Адаптация",
+            description = "Пробное посещение детского сада на 1 час для комфортного знакомства ребенка с новой обстановкой.",
+            color = Color(0xFF37AE48),
+            price = "250 ₽"
+        ),
+    )
+    var selectedService: Service? by remember { mutableStateOf(null) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color(0xFFF5F5F5))
+            .padding(top = 48.dp, bottom = 32.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier.padding(bottom = 32.dp),
+            text = "Наши услуги",
+            style = TextStyle(
+                fontSize = 46.sp,
+                fontFamily = AppTheme.FontFamily,
+            )
+        )
+        if (state.window.isMobileVersion) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                services.forEach { service ->
+                    ServiceCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
+                        service = service,
+                        onClick = {
+                            selectedService = service
+                        }
+                    )
+                }
+            }
+        } else {
+            FlowColumn(
+                horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                maxItemsInEachColumn = 2
+            ) {
+                services.forEach { service ->
+                    ServiceCard(
+                        modifier = Modifier.size(width = 430.dp, height = 180.dp),
+                        service = service,
+                        onClick = {
+                            selectedService = service
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    selectedService?.let { service ->
+        Dialog(
+            onDismissRequest = {
+                selectedService = null
+            },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            ServiceDetailsCard(
+                service = service,
+                state = state
+            )
         }
     }
 }
