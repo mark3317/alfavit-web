@@ -183,7 +183,7 @@ private fun IMainActions.BlockHeaderItem(
         onClick = {
             headerItem.block?.let {
                 coroutineScope.launch {
-                    blockList.animateScrollToItem(it.ordinal)
+                    blockList.animateScrollToItem(it.ordinal, scrollOffset = -72)
                 }
             }
         },
@@ -217,7 +217,7 @@ private fun IMainActions.BlockMobileHeaderItem(
                 onMobileMenuOpened(false)
                 headerItem.block?.let {
                     coroutineScope.launch {
-                        blockList.scrollToItem(it.ordinal)
+                        blockList.scrollToItem(it.ordinal, scrollOffset = -72)
                     }
                 }
             },
