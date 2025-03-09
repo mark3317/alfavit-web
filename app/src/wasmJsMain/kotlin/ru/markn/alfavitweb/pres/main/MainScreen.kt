@@ -29,11 +29,12 @@ import ru.markn.alfavitweb.pres.components.*
 @Composable
 fun IMainActions.MainScreen(state: MainUIState) {
     SharedTransitionLayout {
+        val blockList = rememberLazyListState()
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .then(
-                    if (state.serviceSelected != null || state.isMobileMenuOpened) {
+                    if (state.serviceSelected != null) {
                         Modifier.blur(16.dp)
                     } else Modifier
                 )
@@ -41,39 +42,60 @@ fun IMainActions.MainScreen(state: MainUIState) {
             if (state.window.width != maxWidth || state.window.height != maxHeight) {
                 windowSizeChange(maxWidth, maxHeight)
             }
-            val listState = rememberLazyListState()
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.matchParentSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (state.isMobileMenuOpened) {
+                            Modifier.blur(16.dp)
+                        } else Modifier
+                    )
             ) {
-                items(items = Block.entries) { block ->
-                    when (block) {
-                        Block.Home -> BlockHome(state)
-                        Block.About -> BlockAbout()
-                        Block.Activities -> BlockActivities(state)
-                        Block.Team -> BlockTeam(
-                            state = state,
-                            sharedTransitionScope = this@SharedTransitionLayout
-                        )
+                LazyColumn(
+                    state = blockList,
+                    modifier = Modifier.matchParentSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    items(items = Block.entries) { block ->
+                        when (block) {
+                            Block.Home -> BlockHome(state)
+                            Block.About -> BlockAbout()
+                            Block.Activities -> BlockActivities(state)
+                            Block.Team -> BlockTeam(state = state)
+                            Block.Services -> BlockServices(
+                                state = state,
+                                sharedTransitionScope = this@SharedTransitionLayout
+                            )
 
-                        Block.Services -> BlockServices(
-                            state = state,
-                            sharedTransitionScope = this@SharedTransitionLayout
-                        )
-
-                        Block.Contacts -> BlockContacts(state)
+                            Block.Contacts -> BlockContacts(state)
+                        }
                     }
+                }
+            }
+            Crossfade(
+                targetState = (state.isMobileMenuOpened),
+            ) {
+                if (it) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.5f))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = { onMobileMenuOpened(false) }
+                            )
+                    )
                 }
             }
             BlockHeader(
                 state = state,
-                listState = listState,
+                blockList = blockList,
             )
         }
         Crossfade(
-            targetState = (state.serviceSelected != null || state.isMobileMenuOpened),
+            targetState = (state.serviceSelected != null),
         ) {
             if (it) {
                 Box(

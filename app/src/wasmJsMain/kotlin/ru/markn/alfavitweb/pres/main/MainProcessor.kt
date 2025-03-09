@@ -24,7 +24,7 @@ class MainProcessor : IMainActions, MviViewModel<MainUIState>(
         }
     }
 
-    override fun onMobileMenuPressed() {
+    override fun onMobileMenuOpened(status: Boolean) {
         updateState {
             copy(isMobileMenuOpened = !isMobileMenuOpened)
         }
