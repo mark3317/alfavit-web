@@ -1,18 +1,37 @@
-This is a Kotlin Multiplatform project targeting Web.
+# 🌟 "Алфавит" – Веб-сайт детского сада на Compose Multiplatform (WASM/JS)
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+Репозиторий веб-сайта детского сада "Алфавит", разработанного с использованием **Compose Multiplatform** и WebAssembly (WASM/JS). Этот проект демонстрирует возможности Jetpack Compose для кроссплатформенной разработки, объединяя удобство декларативного UI с возможностями веб-технологий.
 
+---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+## 🚀 Особенности
+✅ **Compose Multiplatform (WASM/JS)** – современный declarative UI-фреймворк от JetBrains.  
+✅ **WebAssembly** – высокая производительность и нативное исполнение в браузере.  
+✅ **Адаптивный дизайн** – поддержка различных экранов и устройств.  
+✅ **Легкость развертывания** – можно хостить на любом статическом сервере.
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
+---
 
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+## 🛠️ Технологии
+🔹 **Kotlin** – основной язык разработки.  
+🔹 **Compose for Web (WASM/JS)** – декларативный UI.  
+🔹 **Koin** – мультиплатформенная библиотека для внедрения зависимостей (DI) с использованием Koin Annotation.
+
+---
+
+## 📦 Установка и запуск
+
+2️⃣ **Запустите сборку проекта:**
+```sh
+./gradlew wasmJsBrowserDevelopmentRun
+```
+
+3️⃣ **Откройте сайт в браузере:**
+Проект автоматически откроется в `http://localhost:8080`
+
+---
+
+## 📸 Скриншоты
+| Главная страница | Услуги                               |
+|-----------------|--------------------------------------|
+| ![Главная](screenshots/home.png) | ![Контакты](screenshots/service.png) |
