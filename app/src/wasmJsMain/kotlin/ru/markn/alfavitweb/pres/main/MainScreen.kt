@@ -1,6 +1,5 @@
 package ru.markn.alfavitweb.pres.main
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -22,7 +21,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.markn.alfavitweb.domain.models.Block
-import ru.markn.alfavitweb.domain.models.Service
 import ru.markn.alfavitweb.pres.components.*
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -30,15 +28,7 @@ import ru.markn.alfavitweb.pres.components.*
 fun IMainActions.MainScreen(state: MainUIState) {
     SharedTransitionLayout {
         val blockList = rememberLazyListState()
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(
-                    if (state.serviceSelected != null) {
-                        Modifier.blur(16.dp)
-                    } else Modifier
-                )
-        ) {
+        BoxWithConstraints {
             if (state.window.width != maxWidth || state.window.height != maxHeight) {
                 windowSizeChange(maxWidth, maxHeight)
             }
@@ -62,12 +52,8 @@ fun IMainActions.MainScreen(state: MainUIState) {
                             Block.Home -> BlockHome(state)
                             Block.About -> BlockAbout()
                             Block.Activities -> BlockActivities(state)
-                            Block.Team -> BlockTeam(state = state)
-                            Block.Services -> BlockServices(
-                                state = state,
-                                sharedTransitionScope = this@SharedTransitionLayout
-                            )
-
+                            Block.Team -> BlockTeam(state)
+                            Block.Services -> BlockServices(state)
                             Block.Contacts -> BlockContacts(state)
                         }
                     }
@@ -84,7 +70,7 @@ fun IMainActions.MainScreen(state: MainUIState) {
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
-                                onClick = { onMobileMenuOpened(false) }
+                                onClick = { onMobileMenuChange(false) }
                             )
                     )
                 }
@@ -93,39 +79,6 @@ fun IMainActions.MainScreen(state: MainUIState) {
                 state = state,
                 blockList = blockList,
             )
-        }
-        Crossfade(
-            targetState = (state.serviceSelected != null),
-        ) {
-            if (it) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = ::onOutsideServicePressed
-                        )
-                )
-            }
-        }
-        Service.entries.forEach { service ->
-            AnimatedVisibility(
-                visible = state.serviceSelected == service,
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    ServiceDetailsCard(
-                        service = service,
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animationVisibilityScope = this@AnimatedVisibility,
-                        state = state
-                    )
-                }
-            }
         }
     }
 }

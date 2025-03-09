@@ -7,11 +7,12 @@ import ru.markn.alfavitweb.pres.utils.mvi.IMviActions
 
 interface IMainActions : IMviActions {
     fun windowSizeChange(width: Dp, height: Dp)
-    fun onMobileMenuOpened(status: Boolean)
+    fun onMobileMenuChange(isOpened: Boolean)
+    fun onInfoOrganizationMenuChange(isOpened: Boolean)
     fun onPersonPressed(person: Person)
     fun onServicePressed(service: Service)
     fun onOutsideServicePressed()
-    fun onAppServicesPressed(sender: Service)
+    fun onLinkPressed(link: String)
     fun onVkLinkPressed()
     fun onYandexCardPressed()
 }

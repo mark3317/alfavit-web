@@ -24,9 +24,15 @@ class MainProcessor : IMainActions, MviViewModel<MainUIState>(
         }
     }
 
-    override fun onMobileMenuOpened(status: Boolean) {
+    override fun onMobileMenuChange(isOpened: Boolean) {
         updateState {
-            copy(isMobileMenuOpened = !isMobileMenuOpened)
+            copy(isMobileMenuOpened = isOpened)
+        }
+    }
+
+    override fun onInfoOrganizationMenuChange(isOpened: Boolean) {
+        updateState {
+            copy(isInfoOrganizationOpened = isOpened)
         }
     }
 
@@ -48,13 +54,8 @@ class MainProcessor : IMainActions, MviViewModel<MainUIState>(
         }
     }
 
-    override fun onAppServicesPressed(sender: Service) {
-        when(sender) {
-            Service.FullDayGroup -> window.open("https://vk.com/market/product/gruppa-polnogo-dnya-226724376-9642454")
-            Service.ShortDayGroup -> window.open("https://vk.com/market/product/gruppa-nepolnogo-dnya-226724376-9642544")
-            Service.OneVisit -> window.open("https://vk.com/market/product/edinorazovoe-poseschenie-226724376-9642565")
-            Service.Adaptation -> window.open("https://vk.com/market/product/adaptatsia-226724376-9642577")
-        }
+    override fun onLinkPressed(link: String) {
+        window.open(link)
     }
 
     override fun onVkLinkPressed() {

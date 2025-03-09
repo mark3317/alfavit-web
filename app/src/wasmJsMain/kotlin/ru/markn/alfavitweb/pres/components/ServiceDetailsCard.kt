@@ -1,8 +1,5 @@
 package ru.markn.alfavitweb.pres.components
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -22,129 +19,85 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import ru.markn.alfavitweb.domain.models.Service
-import ru.markn.alfavitweb.pres.components.shared.ServiceSharedKey
 import ru.markn.alfavitweb.pres.main.IMainActions
 import ru.markn.alfavitweb.pres.main.MainUIState
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun IMainActions.ServiceDetailsCard(
-    sharedTransitionScope: SharedTransitionScope,
-    animationVisibilityScope: AnimatedVisibilityScope,
     service: Service,
     state: MainUIState
 ) {
-    with(sharedTransitionScope) {
-        val scrollState = rememberScrollState()
-        Card(
+    val scrollState = rememberScrollState()
+    Card(
+        modifier = Modifier
+            .sizeIn(maxWidth = state.window.width * 0.8f, maxHeight = state.window.height * 0.9f)
+            .wrapContentSize(),
+        shape = RoundedCornerShape(20),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = Color.White
+        )
+    ) {
+        FlowRow(
             modifier = Modifier
-                .sizeIn(maxWidth = state.window.width * 0.8f, maxHeight = state.window.height * 0.9f)
-                .wrapContentSize()
-                .sharedBounds(
-                    rememberSharedContentState(
-                        key = ServiceSharedKey(
-                            service.title,
-                            ServiceSharedKey.SharedElementType.Bounds
-                        )
-                    ),
-                    animationVisibilityScope,
-                ),
-            shape = RoundedCornerShape(20),
-            colors = CardDefaults.elevatedCardColors(
-                containerColor = Color.White
-            )
+                .verticalScroll(scrollState)
+                .padding(32.dp),
+            horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
         ) {
-            FlowRow(
+            Image(
+                painter = painterResource(service.image),
+                contentDescription = "Service Image",
                 modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .padding(32.dp),
-                horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                itemVerticalAlignment = Alignment.CenterVertically,
+                    .size(250.dp)
+                    .clip(RoundedCornerShape(20))
+                    .border(
+                        width = 6.dp,
+                        color = service.color,
+                        shape = RoundedCornerShape(20)
+                    ),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier.widthIn(min = 300.dp, max = 500.dp),
+                verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(service.image),
-                    contentDescription = "Service Image",
-                    modifier = Modifier
-                        .size(250.dp)
-                        .sharedBounds(
-                            rememberSharedContentState(
-                                key = ServiceSharedKey(
-                                    service.title,
-                                    ServiceSharedKey.SharedElementType.Image
-                                )
-                            ),
-                            animationVisibilityScope,
-                        )
-                        .clip(RoundedCornerShape(20))
-                        .border(
-                            width = 6.dp,
-                            color = service.color,
-                            shape = RoundedCornerShape(20)
-                        ),
-                    contentScale = ContentScale.Crop
+                Text(
+                    text = service.title,
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                    )
                 )
-                Column(
-                    modifier = Modifier.widthIn(min = 300.dp, max = 500.dp),
-                    verticalArrangement = Arrangement.spacedBy(18.dp, Alignment.CenterVertically),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Text(
+                    text = service.description,
+                    style = TextStyle(fontSize = 16.sp)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier
-                            .sharedBounds(
-                                rememberSharedContentState(
-                                    key = ServiceSharedKey(
-                                        service.title,
-                                        ServiceSharedKey.SharedElementType.Title
-                                    )
-                                ),
-                                animationVisibilityScope,
-                            ),
-                        text = service.title,
+                        text = service.price,
                         style = TextStyle(
                             fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
                         )
                     )
-                    Text(
-                        text = service.description,
-                        style = TextStyle(fontSize = 16.sp)
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Button(
+                        onClick = { onLinkPressed(service.link) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = service.color,
+                        )
                     ) {
                         Text(
-                            modifier = Modifier
-                                .sharedElement(
-                                    rememberSharedContentState(
-                                        key = ServiceSharedKey(
-                                            service.title,
-                                            ServiceSharedKey.SharedElementType.Price
-                                        )
-                                    ),
-                                    animationVisibilityScope,
-                                ),
-                            text = service.price,
+                            modifier = Modifier.padding(4.dp),
+                            text = "Подать заявку",
                             style = TextStyle(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
                             )
                         )
-                        Button(
-                            onClick = { onAppServicesPressed(service) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = service.color,
-                            )
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(4.dp),
-                                text = "Подать заявку",
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                )
-                            )
-                        }
                     }
                 }
             }

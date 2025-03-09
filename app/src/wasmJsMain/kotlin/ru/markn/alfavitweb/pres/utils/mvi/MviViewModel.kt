@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class MviViewModel<S: IMviState>(
+abstract class MviViewModel<S : IMviState>(
     initialState: S
 ) : ViewModel() {
     private val _stateFlow = MutableStateFlow(initialState)
@@ -31,9 +31,7 @@ abstract class MviViewModel<S: IMviState>(
     val state: S
         get() = _stateFlow.value
 
-    fun updateState(transform: S.() -> S): S {
-        val newState = state.transform()
-        _stateFlow.value = newState
-        return newState.also { println("updateState: $it") }
+    fun updateState(transform: S.() -> S): S = state.transform().also {
+        _stateFlow.value = it
     }
 }

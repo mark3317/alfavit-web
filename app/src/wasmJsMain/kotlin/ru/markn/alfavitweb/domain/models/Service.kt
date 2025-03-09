@@ -14,6 +14,7 @@ enum class Service(
     val title: String,
     val description: String,
     val price: String,
+    val link: String,
 ) {
     FullDayGroup(
         image = Res.drawable.service1,
@@ -30,7 +31,8 @@ enum class Service(
                 "\n" +
                 "Младшая группа с 1 года до 3-х лет.\n" +
                 "Старшая группа с 4-х лет до 6-7 лет (с уклоном на подготовку к школе: обучение счёту, письму, чтению,окружающему миру).",
-        price = "19500 ₽"
+        price = "19500 ₽",
+        link = "https://vk.com/market/product/gruppa-polnogo-dnya-226724376-9642454",
     ),
     ShortDayGroup(
         image = Res.drawable.service2,
@@ -47,7 +49,8 @@ enum class Service(
                 "\n" +
                 "Младшая группа с 1 года до 3-х лет.\n" +
                 "Старшая группа с 4-х лет до 6-7 лет (с уклоном на подготовку к школе: обучение счёту, письму, чтению,окружающему миру).",
-        price = "15000 ₽"
+        price = "15000 ₽",
+        link = "https://vk.com/market/product/gruppa-nepolnogo-dnya-226724376-9642544",
     ),
     OneVisit(
         image = Res.drawable.service3,
@@ -64,13 +67,15 @@ enum class Service(
                 "\n" +
                 "Младшая группа с 1 года до 3-х лет.\n" +
                 "Старшая группа с 4-х лет до 6-7 лет с уклоном на подготовку к школе: обучение письму, чтению, счёту, окружающему миру и т.д.",
-        price = "1300 ₽"
+        price = "1300 ₽",
+        link = "https://vk.com/market/product/edinorazovoe-poseschenie-226724376-9642565",
     ),
     Adaptation(
         image = Res.drawable.service4,
         title = "Адаптация",
         description = "Пробное посещение детского сада на 1 час для комфортного знакомства ребенка с новой обстановкой.",
         color = Color(0xFF37AE48),
-        price = "250 ₽"
+        price = "250 ₽",
+        link = "https://vk.com/market/product/adaptatsia-226724376-9642577",
     ),
 }

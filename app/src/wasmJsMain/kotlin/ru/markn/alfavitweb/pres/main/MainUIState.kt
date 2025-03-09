@@ -13,6 +13,7 @@ data class MainUIState(
         isMobileVersion = false
     ),
     val isMobileMenuOpened: Boolean = false,
+    val isInfoOrganizationOpened: Boolean = false,
     val activitySelected: Activity = Activity.Activity1,
     val personSelected: Person = Person.Person1,
     val serviceSelected: Service? = null,

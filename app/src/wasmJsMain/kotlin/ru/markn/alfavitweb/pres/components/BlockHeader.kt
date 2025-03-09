@@ -109,7 +109,7 @@ fun IMainActions.BlockHeader(
                                 .padding(12.dp)
                                 .size(46.dp)
                                 .clip(CircleShape)
-                                .clickable(onClick = { onMobileMenuOpened(true) }),
+                                .clickable(onClick = { onMobileMenuChange(false) }),
                         )
                     } else {
                         Icon(
@@ -119,7 +119,7 @@ fun IMainActions.BlockHeader(
                                 .padding(12.dp)
                                 .size(46.dp)
                                 .clip(CircleShape)
-                                .clickable(onClick = { onMobileMenuOpened(false) }),
+                                .clickable(onClick = { onMobileMenuChange(true) }),
                         )
                     }
                 }
@@ -171,6 +171,9 @@ fun IMainActions.BlockHeader(
             }
         }
     }
+    if (state.isInfoOrganizationOpened) {
+        DialogInfoOrganization(state)
+    }
 }
 
 @Composable
@@ -185,6 +188,9 @@ private fun IMainActions.BlockHeaderItem(
                 coroutineScope.launch {
                     blockList.animateScrollToItem(it.ordinal, scrollOffset = -72)
                 }
+            }
+            if (headerItem == HeaderItem.InfoOrganisation) {
+                onInfoOrganizationMenuChange(true)
             }
         },
         colors = ButtonDefaults.textButtonColors(
@@ -214,11 +220,14 @@ private fun IMainActions.BlockMobileHeaderItem(
             .fillMaxWidth()
             .height(68.dp)
             .clickable {
-                onMobileMenuOpened(false)
+                onMobileMenuChange(false)
                 headerItem.block?.let {
                     coroutineScope.launch {
                         blockList.scrollToItem(it.ordinal, scrollOffset = -72)
                     }
+                }
+                if (headerItem == HeaderItem.InfoOrganisation) {
+                    onInfoOrganizationMenuChange(true)
                 }
             },
         horizontalArrangement = Arrangement.Center,
