@@ -39,7 +39,7 @@ fun PersonDetailsCard(
             modifier = modifier
                 .sharedBounds(
                     rememberSharedContentState(key = PersonSharedKey(
-                        person.name,
+                        person.fullName,
                         PersonSharedKey.SharedElementType.Bounds
                     )
                     ),
@@ -68,7 +68,7 @@ fun PersonDetailsCard(
                         .aspectRatio(1f)
                         .sharedElement(
                             rememberSharedContentState(key = PersonSharedKey(
-                                person.name,
+                                person.fullName,
                                 PersonSharedKey.SharedElementType.Photo
                             )
                             ),
@@ -93,13 +93,13 @@ fun PersonDetailsCard(
                         modifier = Modifier
                             .sharedBounds(
                                 rememberSharedContentState(key = PersonSharedKey(
-                                    person.name,
+                                    person.fullName,
                                     PersonSharedKey.SharedElementType.Name
                                 )
                                 ),
                                 animationVisibilityScope,
                             ),
-                        text = person.name,
+                        text = person.fullName,
                         maxLines = 1,
                         style = TextStyle(
                             fontSize = 46.sp,

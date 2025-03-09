@@ -40,7 +40,7 @@ fun PersonDetailsPortraitCard(
                 .sharedBounds(
                     rememberSharedContentState(
                         key = PersonSharedKey(
-                            person.name,
+                            person.fullName,
                             PersonSharedKey.SharedElementType.Bounds
                         )
                     ),
@@ -72,7 +72,7 @@ fun PersonDetailsPortraitCard(
                         .sharedElement(
                             rememberSharedContentState(
                                 key = PersonSharedKey(
-                                    person.name,
+                                    person.fullName,
                                     PersonSharedKey.SharedElementType.Photo
                                 )
                             ),
@@ -91,13 +91,13 @@ fun PersonDetailsPortraitCard(
                         .sharedBounds(
                             rememberSharedContentState(
                                 key = PersonSharedKey(
-                                    person.name,
+                                    person.fullName,
                                     PersonSharedKey.SharedElementType.Name
                                 )
                             ),
                             animationVisibilityScope,
                         ),
-                    text = person.name,
+                    text = person.fullName,
                     maxLines = 1,
                     style = TextStyle(
                         fontSize = 40.sp,

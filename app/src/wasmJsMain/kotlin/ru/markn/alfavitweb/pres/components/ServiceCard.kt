@@ -1,5 +1,8 @@
 package ru.markn.alfavitweb.pres.components
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -20,65 +23,108 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
 import ru.markn.alfavitweb.domain.models.Service
+import ru.markn.alfavitweb.pres.components.shared.ServiceSharedKey
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ServiceCard(
     modifier: Modifier = Modifier,
+    sharedTransitionScope: SharedTransitionScope,
+    animationVisibilityScope: AnimatedVisibilityScope,
     service: Service,
     onClick: () -> Unit
 ) {
-    ElevatedCard(
-        modifier = modifier,
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 8.dp,
-            hoveredElevation = 16.dp,
-        ),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(20),
-        onClick = onClick
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Image(
-                painter = painterResource(service.image),
-                contentDescription = "Service Image",
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(20))
-                    .border(
-                        width = 6.dp,
-                        color = service.color,
-                        shape = RoundedCornerShape(20)
+    with(sharedTransitionScope) {
+        ElevatedCard(
+            modifier = modifier
+                .sharedBounds(
+                    rememberSharedContentState(
+                        key = ServiceSharedKey(
+                            service.title,
+                            ServiceSharedKey.SharedElementType.Bounds
+                        )
                     ),
-                contentScale = ContentScale.Crop
-            )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    animationVisibilityScope,
+                ),
+            elevation = CardDefaults.elevatedCardElevation(
+                defaultElevation = 8.dp,
+                hoveredElevation = 16.dp,
+            ),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            shape = RoundedCornerShape(20),
+            onClick = onClick
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    text = service.title,
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                    )
+                Image(
+                    painter = painterResource(service.image),
+                    contentDescription = "Service Image",
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .aspectRatio(1f)
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = ServiceSharedKey(
+                                    service.title,
+                                    ServiceSharedKey.SharedElementType.Image
+                                )
+                            ),
+                            animationVisibilityScope,
+                        )
+                        .clip(RoundedCornerShape(20))
+                        .border(
+                            width = 6.dp,
+                            color = service.color,
+                            shape = RoundedCornerShape(20)
+                        ),
+                    contentScale = ContentScale.Crop
                 )
-                Text(
-                    text = service.price,
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .sharedBounds(
+                                rememberSharedContentState(
+                                    key = ServiceSharedKey(
+                                        service.title,
+                                        ServiceSharedKey.SharedElementType.Title
+                                    )
+                                ),
+                                animationVisibilityScope,
+                            ),
+                        text = service.title,
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                        )
                     )
-                )
+                    Text(
+                        modifier = Modifier
+                            .sharedElement(
+                                rememberSharedContentState(
+                                    key = ServiceSharedKey(
+                                        service.title,
+                                        ServiceSharedKey.SharedElementType.Price
+                                    )
+                                ),
+                                animationVisibilityScope,
+                            ),
+                        text = service.price,
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    )
+                }
             }
         }
     }
