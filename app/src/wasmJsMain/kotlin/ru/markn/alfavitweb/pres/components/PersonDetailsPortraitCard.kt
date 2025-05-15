@@ -26,12 +26,11 @@ import ru.markn.alfavitweb.domain.models.Person
 import ru.markn.alfavitweb.pres.utils.AppTheme
 import ru.markn.alfavitweb.pres.components.shared.PersonSharedKey
 
+context(sharedTransitionScope: SharedTransitionScope, animationVisibilityScope: AnimatedVisibilityScope)
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PersonDetailsPortraitCard(
     modifier: Modifier = Modifier,
-    sharedTransitionScope: SharedTransitionScope,
-    animationVisibilityScope: AnimatedVisibilityScope,
     person: Person,
 ) {
     with(sharedTransitionScope) {

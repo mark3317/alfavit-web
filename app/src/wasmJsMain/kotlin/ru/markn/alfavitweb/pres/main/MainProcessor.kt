@@ -1,7 +1,6 @@
 package ru.markn.alfavitweb.pres.main
 
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import kotlinx.browser.window
 import org.koin.android.annotation.KoinViewModel
 import ru.markn.alfavitweb.domain.models.Person
@@ -18,7 +17,6 @@ class MainProcessor : IMainActions, MviViewModel<MainUIState>(
                 window = MainUIState.Window(
                     width = width,
                     height = height,
-                    isMobileVersion = width < 920.dp
                 )
             )
         }
@@ -48,9 +46,13 @@ class MainProcessor : IMainActions, MviViewModel<MainUIState>(
         }
     }
 
-    override fun onOutsideServicePressed() {
+    override fun onOutsideDialogPressed() {
         updateState {
-            copy(serviceSelected = null)
+            copy(
+                serviceSelected = null,
+                isInfoOrganizationOpened = false,
+                isMobileMenuOpened = false,
+            )
         }
     }
 

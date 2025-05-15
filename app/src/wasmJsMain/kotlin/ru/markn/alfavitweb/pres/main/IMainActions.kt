@@ -11,7 +11,7 @@ interface IMainActions : IMviActions {
     fun onInfoOrganizationMenuChange(isOpened: Boolean)
     fun onPersonPressed(person: Person)
     fun onServicePressed(service: Service)
-    fun onOutsideServicePressed()
+    fun onOutsideDialogPressed()
     fun onLinkPressed(link: String)
     fun onVkLinkPressed()
     fun onYandexCardPressed()

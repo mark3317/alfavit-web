@@ -62,13 +62,11 @@ fun IMainActions.BlockTeam(state: MainUIState) {
                     AnimatedVisibility(
                         visible = state.personSelected == person,
                     ) {
-                        if (state.window.isMobileVersion) {
+                        if (state.isMobileVersion) {
                             PersonDetailsPortraitCard(
                                 modifier = Modifier
                                     .widthIn(max = 600.dp)
                                     .padding(16.dp),
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animationVisibilityScope = this@AnimatedVisibility,
                                 person = person,
                             )
                         } else {
@@ -76,8 +74,6 @@ fun IMainActions.BlockTeam(state: MainUIState) {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(16.dp),
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animationVisibilityScope = this@AnimatedVisibility,
                                 person = person,
                             )
                         }
@@ -90,13 +86,9 @@ fun IMainActions.BlockTeam(state: MainUIState) {
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Person.entries.forEach { person ->
-                    AnimatedVisibility(
-                        visible = state.personSelected != person,
-                    ) {
+                    AnimatedVisibility(visible = state.personSelected != person) {
                         PersonCard(
                             modifier = Modifier.width(210.dp),
-                            sharedTransitionScope = this@SharedTransitionLayout,
-                            animationVisibilityScope = this@AnimatedVisibility,
                             person = person,
                             onClick = { onPersonPressed(person) }
                         )

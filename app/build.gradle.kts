@@ -10,6 +10,9 @@ plugins {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-parameters")
+    }
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser {

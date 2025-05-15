@@ -48,7 +48,7 @@ fun BlockActivities(state: MainUIState) {
                 fontFamily = AppTheme.FontFamily,
             )
         )
-        if (state.window.isMobileVersion) {
+        if (state.isMobileVersion) {
             val coroutineScope = rememberCoroutineScope()
             val pagerState = rememberPagerState(pageCount = Activity.entries::size)
             HorizontalPager(

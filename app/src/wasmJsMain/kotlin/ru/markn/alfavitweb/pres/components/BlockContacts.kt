@@ -117,12 +117,12 @@ fun IMainActions.BlockContacts(state: MainUIState) {
                         tint = Color(0xFF233D4D),
                         modifier = Modifier
                             .size(46.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = ::onVkLinkPressed
-                            )
-                            .pointerHoverIcon(PointerIcon.Hand),
+                            ),
                     )
                     Icon(
                         painter = painterResource(Res.drawable.yandex_maps),
@@ -131,16 +131,16 @@ fun IMainActions.BlockContacts(state: MainUIState) {
                         modifier = Modifier
                             .size(46.dp)
                             .clip(CircleShape)
+                            .pointerHoverIcon(PointerIcon.Hand)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = ::onYandexCardPressed
-                            )
-                            .pointerHoverIcon(PointerIcon.Hand),
+                            ),
                     )
                 }
             }
-            if (!state.window.isMobileVersion) {
+            if (!state.isMobileVersion) {
                 ElevatedCard(
                     modifier = Modifier
                         .size(width = 600.dp, height = 420.dp)
