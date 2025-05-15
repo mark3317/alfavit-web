@@ -6,6 +6,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,6 +53,7 @@ fun IMainActions.DialogInfoOrganization(state: MainUIState) {
                 )
                 InfoOrganization.entries.forEach { infoOrganization ->
                     TextButton(
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                         onClick = {
                             onLinkPressed(infoOrganization.link)
                         },
@@ -61,12 +64,12 @@ fun IMainActions.DialogInfoOrganization(state: MainUIState) {
                     ) {
                         Text(
                             modifier = Modifier
-                                .padding(vertical = 12.dp)
+                                .padding(vertical = 8.dp)
                                 .width(500.dp),
                             text = infoOrganization.title,
                             style = TextStyle(
                                 fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.SemiBold,
                             )
                         )
                     }

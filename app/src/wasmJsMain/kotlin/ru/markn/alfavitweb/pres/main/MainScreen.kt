@@ -14,18 +14,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.unit.dp
 import ru.markn.alfavitweb.domain.models.Block
 import ru.markn.alfavitweb.pres.components.*
+import ru.markn.alfavitweb.pres.utils.AppTheme
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun IMainActions.MainScreen(state: MainUIState) {
+    val fontFamilyResolver = LocalFontFamilyResolver.current
+    val font = AppTheme.FontFamily
+    LaunchedEffect(fontFamilyResolver) {
+        fontFamilyResolver.preload(font)
+    }
     SharedTransitionLayout {
         val blockList = rememberLazyListState()
         BoxWithConstraints {

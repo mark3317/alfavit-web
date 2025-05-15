@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -95,7 +97,8 @@ fun IMainActions.BlockHeader(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                             onClick = ::onVkLinkPressed
-                        ),
+                        )
+                        .pointerHoverIcon(PointerIcon.Hand),
                 )
             } else {
                 AnimatedContent(
@@ -157,7 +160,8 @@ fun IMainActions.BlockHeader(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(68.dp)
-                        .clickable(onClick = ::onVkLinkPressed),
+                        .clickable(onClick = ::onVkLinkPressed)
+                        .pointerHoverIcon(PointerIcon.Hand),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -183,6 +187,7 @@ private fun IMainActions.BlockHeaderItem(
     coroutineScope: CoroutineScope,
 ) {
     TextButton(
+        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
         onClick = {
             headerItem.block?.let {
                 coroutineScope.launch {

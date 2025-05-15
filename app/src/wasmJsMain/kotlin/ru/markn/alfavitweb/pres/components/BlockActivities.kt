@@ -3,17 +3,7 @@ package ru.markn.alfavitweb.pres.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -27,19 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import kotlinx.coroutines.launch
 import ru.markn.alfavitweb.domain.models.Activity
-import ru.markn.alfavitweb.pres.main.IMainActions
 import ru.markn.alfavitweb.pres.main.MainUIState
 import ru.markn.alfavitweb.pres.utils.AppTheme
 import kotlin.math.absoluteValue
 
 @Composable
-fun IMainActions.BlockActivities(state: MainUIState) {
+fun BlockActivities(state: MainUIState) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -89,7 +80,8 @@ fun IMainActions.BlockActivities(state: MainUIState) {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(page)
                             }
-                        },
+                        }
+                        .pointerHoverIcon(PointerIcon.Hand),
                     activity = Activity.entries[page]
                 )
             }

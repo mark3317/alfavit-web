@@ -21,12 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import ru.markn.alfavitweb.pres.main.IMainActions
 import ru.markn.alfavitweb.pres.main.MainUIState
 import ru.markn.alfavitweb.pres.utils.AppTheme
 
 @Composable
-fun IMainActions.BlockHome(state: MainUIState) {
+fun BlockHome(state: MainUIState) {
     Box(
         modifier = Modifier
             .fillMaxWidth()

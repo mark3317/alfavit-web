@@ -26,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -119,7 +121,8 @@ fun IMainActions.BlockContacts(state: MainUIState) {
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = ::onVkLinkPressed
-                            ),
+                            )
+                            .pointerHoverIcon(PointerIcon.Hand),
                     )
                     Icon(
                         painter = painterResource(Res.drawable.yandex_maps),
@@ -132,13 +135,16 @@ fun IMainActions.BlockContacts(state: MainUIState) {
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = ::onYandexCardPressed
-                            ),
+                            )
+                            .pointerHoverIcon(PointerIcon.Hand),
                     )
                 }
             }
             if (!state.window.isMobileVersion) {
                 ElevatedCard(
-                    modifier = Modifier.size(width = 600.dp, height = 420.dp),
+                    modifier = Modifier
+                        .size(width = 600.dp, height = 420.dp)
+                        .pointerHoverIcon(PointerIcon.Hand),
                     shape = RoundedCornerShape(20),
                     elevation = CardDefaults.elevatedCardElevation(
                         defaultElevation = 8.dp,
